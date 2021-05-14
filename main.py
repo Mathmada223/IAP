@@ -7,6 +7,7 @@ import importlib
 import json
 from tts import tts
 import playsound
+from utils.colors import *
 
 options = {}
 with open("./utils/options.json") as f:
@@ -28,14 +29,14 @@ for intent_folder in intent_folders:
             intents[intent_folder] = intents[intent_folder].create_intent()
             intents[intent_folder].initialize()
         except Exception as e:
-            print(f"[INTENT-LOADER] Couldn't load {intent_folder}!")
-            print(f"[INTENT-LOADER] {e}")
+            print(f"{RED}[INTENT-LOADER] Couldn't load {intent_folder}!")
+            print(f"[INTENT-LOADER] {e}{RESET}")
             del intents[intent_folder]
-print(f"[INTENT-LOADER] Successfully loaded {len(intents)} intent(s).")
+print(f"{BLUE}[INTENT-LOADER] Successfully loaded {len(intents)} intent(s).{RESET}")
 
 
 def on_wakeword():
-    print("[WAKEWORD-DETECTION] Wakeword detected. Listening...")
+    print(f"{MAGENTA}[WAKEWORD-DETECTION] Wakeword detected. Listening...{RESET}")
 
     mqtt_utils.publish("iap/wakeword", json.dumps({ "wakeword": options["wakeword"] }))
     mqtt_utils.publish("iap/state", json.dumps({ "state": "listening" }))
@@ -43,7 +44,7 @@ def on_wakeword():
     playsound.playsound("./rsc/listening.mp3")
 
     stt_response = stt.recognize()
-    print(f"[STT] Response: {stt_response}. Analyzing...")
+    print(f"{MAGENTA}[STT] Response: {stt_response}. Analyzing...{RESET}")
 
     mqtt_utils.publish("iap/state", json.dumps({"state": "thinking"}))
 
@@ -51,28 +52,28 @@ def on_wakeword():
         try:
             wit_response = client.message(stt_response["transcription"])
         except:
-            print("[WIT AI] Error while calling API!")
+            print(f"{RED}[WIT AI] Error while calling API!{RESET}")
             if languages.get(options["language"], False):
                 tts.say(languages[options["language"]]["error_message"])
             return
-        print(f"[WIT AI] Response: {wit_response}")
+        print(f"{YELLOW}[WIT AI] Response: {wit_response}{RESET}")
 
         if len(wit_response["intents"]) > 0:
             intent_name = wit_response["intents"][0]["name"]
 
-            print(f"[IAP] Intent '{intent_name}' detected. Running 'intent_detected()' in '__init__.py' if available...")
+            print(f"{GREEN}[IAP] Intent '{intent_name}' detected. Running 'intent_detected()' in '__init__.py' if available...{RESET}")
 
             mqtt_utils.notify_intent(wit_response)
 
             if intents.get(intent_name, False):
                 try:
                     intents[intent_name].intent_detected(wit_response)
-                    print(f"[IAP] Successfully ran 'intent_detected()' for {intent_name}.")
+                    print(f"{GREEN}[IAP] Successfully ran 'intent_detected()' for {intent_name}.{RESET}")
                 except Exception as e:
-                    print(f"[IAP] Couldn't run 'intent_detected()' on {intent_name}!")
-                    print(f"[{intent_name}] {e}")
+                    print(f"{RED}[IAP] Couldn't run 'intent_detected()' on {intent_name}!")
+                    print(f"[{intent_name}] {e}{RESET}")
         else:
-            print("[WIT AI] Error while calling API!")
+            print(f"{RED}[WIT AI] Error while calling API!{RESET}")
             if languages.get(options["language"], False):
                 tts.say(languages[options["language"]]["error_message"])
             return
@@ -87,7 +88,7 @@ def on_wakeword():
 
 wake_word.add_wakeword_callback(on_wakeword)
 
-print("[IAP] Started all services successfully.")
+print(f"{GREEN}[IAP] Started all services successfully.{RESET}")
 
 # Keep main process awake
 while True:

@@ -3,6 +3,7 @@ import pyaudio
 import json
 import threading
 import struct
+from utils.colors import *
 
 options = {}
 
@@ -34,18 +35,18 @@ def listen():
                 for callback in callbacks:
                     callback()
     except KeyboardInterrupt:
-        print("[WAKEWORD-DETECTION] Shutting down Wake Word detection....")
+        print(f"{MAGENTA}[WAKEWORD-DETECTION] Shutting down Wake Word detection....{RESET}")
     finally:
         if handle is not None:
-            print("[WAKEWORD-DETECTION] Shutting down Porcupine Handle...")
+            print(f"{MAGENTA}[WAKEWORD-DETECTION] Shutting down Porcupine Handle...{RESET}")
             handle.delete()
         if audio_stream is not None:
-            print("[WAKEWORD-DETECTION] Shtuting down PyAudio AudioStream...")
+            print(f"{MAGENTA}[WAKEWORD-DETECTION] Shtuting down PyAudio AudioStream...{RESET}")
             audio_stream.close()
         if pa is not None:
-            print("[WAKEWORD-DETECTION] Shutting down PyAudio...")
+            print(f"{MAGENTA}[WAKEWORD-DETECTION] Shutting down PyAudio...")
             pa.terminate()
-        print("[WAKEWORD-DETECTION] Successfully shutted down Wake Word detection")
+        print(f"{MAGENTA}[WAKEWORD-DETECTION] Successfully shutted down Wake Word detection{RESET}")
 
 
 def add_wakeword_callback(callback):
