@@ -1,6 +1,7 @@
 import pyttsx3
 import threading
 from utils.colors import *
+import utils.logger as logger
 
 
 def sync_say(what):
@@ -11,6 +12,6 @@ def sync_say(what):
 
 
 def say(what):
-    print(f"{CYAN}[TTS] Saying '{what}'...{RESET}")
+    logger.log(f"{CYAN}[TTS] Saying '{what}'...{RESET}")
     speak_thread = threading.Thread(target=sync_say, name="TTS Thread", args=(what,))
     speak_thread.start()

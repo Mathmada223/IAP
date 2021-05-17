@@ -2,7 +2,7 @@ from utils.intent import IAPIntent
 from utils import intent_utils
 import requests
 from tts import tts
-
+import utils.logger as logger
 
 class WeatherAtPlaceIntent(IAPIntent):
     def __init__(self):
@@ -20,7 +20,7 @@ class WeatherAtPlaceIntent(IAPIntent):
         locations = intent_utils.get_locations(wit_result)
         location_one = locations[0]["body"]
         weather = self.get_openweathermap(location_one).json()
-        print(weather)
+        logger.log(weather)
         tts.say(
             f"in {location_one} ist es gerade {weather['weather'][0]['description']} mit einer temperatur von {round(weather['main']['temp'])}°. Die minimale bzw. maximale Temperatur beträgt {round(weather['main']['temp_min'])} bzw. {round(weather['main']['temp_max'])}°")
 

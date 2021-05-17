@@ -2,6 +2,7 @@ from mqtt import mqtt
 import json
 from tts import tts
 from utils.colors import *
+import utils.logger as logger
 
 
 options = {}
@@ -11,7 +12,7 @@ with open("./utils/options.json") as f:
 
 
 def on_message(client, userdata, msg):
-    print(f"{GREEN}[MQTT-Utils] Processing message...{RESET}")
+    logger.log(f"{GREEN}[MQTT-Utils] Processing message...{RESET}")
     if msg.topic == "iap/tts/say":
         tts.say(msg.payload.decode("UTF-8"))
 
