@@ -1,5 +1,5 @@
 <h1>IAP</h1>
-<h2>Intelligent Voice Assistant with Wit.ai</h2>
+<p style="font-size: 18px; font-weight: bold;">Intelligent Voice Assistant with Wit.ai</p>
 
 <div class="copyright-area">
   <h2>Copyright 2021 Mathmada223</h2>
